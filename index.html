@@ -2,6 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <!-- Content Security Policy: only this site's own files, plus the intro script below
+         (allowed by its hash; if you edit that script, update the hash). -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-YcRY9L9TCGc8rk7m7+YNxx2pqIpUplVFVlnIc7ON8N8='; style-src 'self'; font-src 'self'; img-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <script>
+        // Before first paint: play the intro (wave dots assemble the W) once per session,
+        // never for reduced motion. site.css hides the logo while .intro is set and has a
+        // CSS fallback that reveals it if hero.js never runs.
+        try {
+            if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !sessionStorage.getItem('wagmi-intro')) {
+                document.documentElement.classList.add('intro');
+            }
+        } catch (e) { /* storage blocked: skip the intro */ }
+    </script>
     <title>WAGMI | Orchestrating Digital Experiences</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="WAGMI orchestrates digital experiences through web and mobile app development, backend services, cloud infrastructure, and ERP integrations.">
@@ -50,134 +64,12 @@
         }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Brand tokens (generated from wagmi-brand/tokens/tokens.json; don't edit by hand) -->
     <link rel="stylesheet" href="assets/css/tokens.css">
-
-    <style>
-        *, *::before, *::after { box-sizing: border-box; }
-
-        html { background: var(--bg, #0e0f0c); }
-        body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: var(--bg, #0e0f0c);
-            color: var(--text-muted, #b9b4a8);
-            font-family: var(--font-sans);
-            font-size: 15px;
-            line-height: 22px;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-        ::selection { background: var(--accent-fill); color: var(--on-accent); }
-
-        a { color: var(--accent); }
-        a:focus-visible, button:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 4px;
-            border-radius: var(--radius-sm);
-        }
-
-        /* Pixel art is never smoothed */
-        .pixel { image-rendering: pixelated; }
-
-        .sr-only {
-            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-            overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
-        }
-
-        /* ---------- Nav ---------- */
-        .nav {
-            position: fixed;
-            inset: 0 0 auto 0;
-            z-index: 40;
-            height: 64px;
-            background: rgba(14, 15, 12, 0.85);
-            border-bottom: 1px solid var(--line);
-            -webkit-backdrop-filter: blur(12px);
-            backdrop-filter: blur(12px);
-        }
-        .nav-inner {
-            max-width: 1152px;
-            height: 100%;
-            margin: 0 auto;
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-        }
-        /* Logotype file is 98 x 40 (41 x 12 grid at 2x, plus 8px clear space).
-           Shown at 1:1 so the art is exactly 82 x 24. The negative margin lines
-           the art, not the padding, up with the page gutter. */
-        .nav-logo { display: block; margin-left: -8px; line-height: 0; }
-        .nav-logo img { width: 98px; height: 40px; }
-
-        /* ---------- Hero ---------- */
-        .hero {
-            position: relative;
-            flex: 1;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 96px 16px 64px;
-            overflow: hidden;
-        }
-        #canvas-container {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            overflow: hidden;
-        }
-        .hero-fade {
-            position: absolute;
-            left: 0; right: 0; bottom: 0;
-            height: 128px;
-            background: linear-gradient(to top, var(--bg), transparent);
-            z-index: 0;
-        }
-        .hero-content { position: relative; z-index: 1; margin: 0; text-align: center; }
-        /* Logotype file is 98 x 40 (art 82 x 24 plus clear space). Shown at 4x
-           (art 328 x 96), or 2x on phones. Whole multiples only. */
-        .hero-logo { display: block; width: 392px; height: 160px; margin: 0 auto; }
-        .hero-tagline {
-            display: block;
-            margin-top: 8px;
-            font-size: 15px;
-            line-height: 22px;
-            font-weight: 500;
-            letter-spacing: 0.16em;
-            color: var(--text-muted, #b9b4a8);
-        }
-        @media (max-width: 720px) {
-            .hero-logo { width: 196px; height: 80px; }
-            .hero-tagline { font-size: 13px; line-height: 18px; letter-spacing: 0.14em; }
-        }
-
-        /* ---------- Footer ---------- */
-        .footer {
-            position: relative;
-            z-index: 1;
-            border-top: 1px solid var(--line);
-            padding: 24px;
-            text-align: center;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            line-height: 16px;
-            letter-spacing: 0.08em;
-            color: var(--text-muted, #b9b4a8);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            #canvas-container { display: none; }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
 
-    <nav class="nav" aria-label="Main">
+    <nav class="nav nav--fixed" aria-label="Main">
         <div class="nav-inner">
             <a href="./" class="nav-logo" aria-label="WAGMI home">
                 <img src="assets/img/wagmi-logotype.svg" alt="WAGMI" width="98" height="40">
@@ -185,97 +77,39 @@
         </div>
     </nav>
 
-    <main class="hero" id="hero">
-        <div id="canvas-container" aria-hidden="true"></div>
+    <main class="hero">
+        <div class="hero-wave" aria-hidden="true"></div>
         <div class="hero-fade" aria-hidden="true"></div>
 
         <h1 class="hero-content">
-            <img class="hero-logo" src="assets/img/wagmi-logotype-blink.svg" width="392" height="160" alt="WAGMI">
+            <svg class="hero-logo" viewBox="0 0 98 40" width="392" height="160" role="img" aria-label="WAGMI" shape-rendering="crispEdges">
+                <!-- Pixel logotype (41 x 12 grid at 2x, 8px clear space), from wagmi-logotype.svg.
+                     Inline so hero.js can read the W's pixels, even when opened from disk. -->
+                <g transform="translate(8 8) scale(2)">
+                    <g class="w-mark">
+                    <path fill="#9BD94A" d="M2 0h3v1h-3zM11 0h3v1h-3zM1 1h1v1h-1zM5 1h1v1h-1zM10 1h1v1h-1zM14 1h1v1h-1zM1 2h1v1h-1zM5 2h1v1h-1zM10 2h1v1h-1zM14 2h1v1h-1zM1 3h1v1h-1zM5 3h1v1h-1zM10 3h1v1h-1zM14 3h1v1h-1zM2 4h4v1h-4zM10 4h4v1h-4zM3 5h2v1h-2zM11 5h2v1h-2zM3 6h2v1h-2zM7 6h2v1h-2zM11 6h2v1h-2zM3 7h2v1h-2zM7 7h2v1h-2zM11 7h2v1h-2zM3 8h10v1h-10zM3 9h10v1h-10zM4 10h3v1h-3zM9 10h3v1h-3z"/>
+                    <path fill="#5E9E2E" d="M0 2h1v1h-1zM15 2h1v1h-1zM0 3h1v1h-1zM15 3h1v1h-1zM1 4h1v1h-1zM14 4h1v1h-1zM2 5h1v1h-1zM13 5h1v1h-1zM2 6h1v1h-1zM13 6h1v1h-1zM2 7h1v1h-1zM13 7h1v1h-1zM2 8h1v1h-1zM13 8h1v1h-1zM2 9h1v1h-1zM13 9h1v1h-1zM3 10h1v1h-1zM12 10h1v1h-1zM4 11h2v1h-2zM10 11h2v1h-2z"/>
+                    <path fill="#F6F1E7" d="M2 1h3v1h-3zM11 1h3v1h-3zM2 2h1v1h-1zM13 2h1v1h-1zM2 3h1v1h-1zM13 3h1v1h-1z"/>
+                    <path fill="#0E0F0C" d="M3 2h2v1h-2zM11 2h2v1h-2zM3 3h2v1h-2zM11 3h2v1h-2z"/>
+                    </g>
+                    <g class="w-letters">
+                    <path fill="#9BD94A" d="M39 5h2v1h-2z"/>
+                    <path fill="#F6F1E7" d="M16 5h5v1h-5zM24 5h5v1h-5zM31 5h2v1h-2zM36 5h2v1h-2zM15 6h2v1h-2zM20 6h2v1h-2zM23 6h2v1h-2zM28 6h2v1h-2zM31 6h3v1h-3zM35 6h3v1h-3zM15 7h2v1h-2zM20 7h2v1h-2zM23 7h2v1h-2zM31 7h7v1h-7zM39 7h2v1h-2zM15 8h7v1h-7zM23 8h2v1h-2zM26 8h4v1h-4zM31 8h2v1h-2zM34 8h1v1h-1zM36 8h2v1h-2zM39 8h2v1h-2zM15 9h2v1h-2zM20 9h2v1h-2zM23 9h2v1h-2zM28 9h2v1h-2zM31 9h2v1h-2zM36 9h2v1h-2zM39 9h2v1h-2zM15 10h2v1h-2zM20 10h2v1h-2zM23 10h2v1h-2zM28 10h2v1h-2zM31 10h2v1h-2zM36 10h2v1h-2zM39 10h2v1h-2zM15 11h2v1h-2zM20 11h2v1h-2zM24 11h5v1h-5zM31 11h2v1h-2zM36 11h2v1h-2zM39 11h2v1h-2z"/>
+                    </g>
+                    <g class="w-lid w-lid-half"><path fill="#9BD94A" d="M2 1h3v2h-3zM11 1h3v2h-3z"/><path fill="#5E9E2E" d="M2 2h3v1h-3zM11 2h3v1h-3z"/></g>
+                    <g class="w-lid w-lid-shut"><path fill="#9BD94A" d="M2 1h3v3h-3zM11 1h3v3h-3z"/><path fill="#0E0F0C" d="M2 3h3v1h-3zM11 3h3v1h-3z"/></g>
+                </g>
+            </svg>
             <span class="hero-tagline">Orchestrating Digital Experiences</span>
         </h1>
     </main>
 
     <footer class="footer">
-        &copy; <span id="year">2026</span> Wagmi Technology Sdn Bhd
+        &copy; <span data-year>2026</span> Wagmi Technology Sdn Bhd
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        // Lime pixel-dot wave behind the hero. Skipped when the visitor prefers reduced motion.
-        function initWave() {
-            const container = document.getElementById('canvas-container');
-            if (!container || typeof THREE === 'undefined') return;
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 15, 30);
-            camera.lookAt(0, 0, 0);
-
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            container.appendChild(renderer.domElement);
-
-            const countX = 50, countZ = 50, separation = 2;
-            const offsetX = (countX * separation) / 2;
-            const offsetZ = (countZ * separation) / 2;
-            const positions = new Float32Array(countX * countZ * 3);
-            let i = 0;
-            for (let x = 0; x < countX; x++) {
-                for (let z = 0; z < countZ; z++) {
-                    positions[i] = x * separation - offsetX;
-                    positions[i + 1] = 0;
-                    positions[i + 2] = z * separation - offsetZ;
-                    i += 3;
-                }
-            }
-            const geometry = new THREE.BufferGeometry();
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-            const material = new THREE.PointsMaterial({
-                size: 0.14,
-                color: 0x9BD94A, // brand-lime
-                transparent: true,
-                opacity: 0.45,
-            });
-            const points = new THREE.Points(geometry, material);
-            scene.add(points);
-
-            let mouseX = 0, mouseY = 0;
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX - window.innerWidth / 2;
-                mouseY = e.clientY - window.innerHeight / 2;
-            });
-
-            const clock = new THREE.Clock();
-            (function animate() {
-                requestAnimationFrame(animate);
-                const t = clock.getElapsedTime();
-                const p = geometry.attributes.position.array;
-                let j = 0;
-                for (let x = 0; x < countX; x++) {
-                    for (let z = 0; z < countZ; z++) {
-                        p[j + 1] = Math.sin(x / 2 + t) * 2 + Math.cos(z / 2 + t) * 2;
-                        j += 3;
-                    }
-                }
-                geometry.attributes.position.needsUpdate = true;
-                points.rotation.y += 0.05 * (mouseX * 0.001 - points.rotation.y);
-                points.rotation.x += 0.05 * (mouseY * 0.001 - points.rotation.x);
-                renderer.render(scene, camera);
-            })();
-
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', initWave);
-    </script>
+    <script src="assets/js/vendor/three.min.js"></script>  <!-- three.js r134, MIT -->
+    <script src="assets/js/site.js"></script>
+    <script src="assets/js/hero.js"></script>
 </body>
 </html>

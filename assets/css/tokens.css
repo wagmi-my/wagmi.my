@@ -1,5 +1,5 @@
 /* WAGMI design tokens. Generated from tokens/tokens.json by source/build_tokens.py. Do not edit; edit the source and rerun. */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+/* wagmi.my: Google Fonts @import removed; Inter is self-hosted in site.css (privacy, CSP). */
 
 @font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }

@@ -1,0 +1,224 @@
+/* WAGMI site styles. Shared by index.html and 404.html.
+   Colours, type and spacing come from tokens.css (brand tokens; don't edit that file by hand). */
+
+:root {
+    /* Intro timings. hero.js reads these, so CSS and JS can't drift apart. */
+    --intro-logo-fade: 250ms;    /* logo + tagline fade in over the assembled W */
+    --intro-canvas-fade: 350ms;  /* then the dot W fades out beneath it */
+    --intro-fallback: 4s;        /* safety net: show the logo even if the intro never runs */
+}
+
+/* ---------- Fonts ----------
+   Inter v4.1 (SIL OFL, see assets/fonts/Inter-OFL.txt), self-hosted so no visitor data
+   goes to Google. JetBrains Mono is declared in tokens.css. Browsers only download the
+   weights a page uses. */
+@font-face { font-family: "Inter"; src: url("../fonts/Inter-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("../fonts/Inter-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("../fonts/Inter-SemiBold.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("../fonts/Inter-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("../fonts/Inter-ExtraBold.woff2") format("woff2"); font-weight: 800; font-style: normal; font-display: swap; }
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--bg, #0e0f0c); }
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg, #0e0f0c);
+    color: var(--text-muted, #b9b4a8);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 22px;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+::selection { background: var(--accent-fill); color: var(--on-accent); }
+
+a { color: var(--accent); }
+a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+}
+
+/* Pixel art is never smoothed */
+.pixel { image-rendering: pixelated; }
+
+.sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- Nav ---------- */
+.nav {
+    height: 64px;
+    border-bottom: 1px solid var(--line);
+}
+.nav--fixed {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 40;
+    background: rgba(14, 15, 12, 0.85);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+.nav-inner {
+    max-width: 1152px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+}
+/* Logotype file is 98 x 40 (41 x 12 grid at 2x, plus 8px clear space), shown at 1:1
+   so the art is exactly 82 x 24. The negative margin lines the art, not the padding,
+   up with the page gutter. */
+.nav-logo { display: block; margin-left: -8px; line-height: 0; }
+.nav-logo img { width: 98px; height: 40px; }
+
+/* ---------- Footer ---------- */
+.footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--line);
+    padding: 24px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted, #b9b4a8);
+}
+
+/* ---------- Hero (index.html) ---------- */
+.hero {
+    position: relative;
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 96px 16px 64px;
+    overflow: hidden;
+}
+.hero-wave {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+.hero-fade {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 128px;
+    background: linear-gradient(to top, var(--bg, #0e0f0c), transparent);
+    z-index: 0;
+}
+.hero-content { position: relative; z-index: 1; margin: 0; text-align: center; }
+
+/* Logotype at 4x (art 328 x 96), 2x on phones. Whole multiples only. */
+.hero-logo { display: block; width: 392px; height: 160px; margin: 0 auto; }
+.hero-tagline {
+    display: block;
+    margin-top: 8px;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--text-muted, #b9b4a8);
+}
+@media (max-width: 720px) {
+    .hero-logo { width: 196px; height: 80px; }
+    .hero-tagline { font-size: 13px; line-height: 18px; letter-spacing: 0.14em; }
+}
+
+/* The W blinks: a blink at ~3.0s and a quick double blink at ~6.2s in a 7s loop
+   (about one blink per 3.5s). Each blink: half-closed 60ms, shut 100ms, half-closed 60ms. */
+.w-lid { opacity: 0; animation: 7s steps(1, end) infinite; }
+.w-lid-half { animation-name: w-lid-half; }
+.w-lid-shut { animation-name: w-lid-shut; }
+@keyframes w-lid-half {
+    0% { opacity: 0 }
+    42.86% { opacity: 1 } 43.71% { opacity: 0 } 45.14% { opacity: 1 } 46% { opacity: 0 }
+    88.57% { opacity: 1 } 89.43% { opacity: 0 } 90.86% { opacity: 1 } 91.71% { opacity: 0 }
+    93.14% { opacity: 1 } 94% { opacity: 0 } 95.43% { opacity: 1 } 96.29% { opacity: 0 }
+}
+@keyframes w-lid-shut {
+    0% { opacity: 0 }
+    43.71% { opacity: 1 } 45.14% { opacity: 0 }
+    89.43% { opacity: 1 } 90.86% { opacity: 0 }
+    94% { opacity: 1 } 95.43% { opacity: 0 }
+}
+
+/* ---------- Intro: wave dots assemble the W (hero.js) ----------
+   The head script adds .intro (once per session, not for reduced motion).
+   Logo and tagline stay hidden until hero.js removes it. If hero.js never starts
+   the intro, the fallback animation reveals them after --intro-fallback. */
+.hero-logo, .hero-tagline { transition: opacity var(--intro-logo-fade) ease; }
+.hero-tagline { transition-delay: 0.1s; }
+.intro .hero-logo, .intro .hero-tagline {
+    opacity: 0;
+    animation: intro-fallback 0s var(--intro-fallback) forwards;
+}
+.intro-playing .hero-logo, .intro-playing .hero-tagline { animation: none; }
+@keyframes intro-fallback { to { opacity: 1; } }
+
+.intro-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 30;
+    pointer-events: none;
+    transition: opacity var(--intro-canvas-fade) ease;
+}
+
+/* ---------- Not found (404.html) ---------- */
+.not-found {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 16px;
+}
+.not-found-mascot { width: 256px; height: auto; max-width: 100%; }
+.not-found-code {
+    margin: 24px 0 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+}
+.not-found h1 {
+    margin: 0 0 8px;
+    font-size: 32px;
+    line-height: 38px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text);
+}
+.not-found p { margin: 0 0 32px; max-width: 36ch; }
+
+.button {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-fill);
+    color: var(--on-accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+.button:hover { background: var(--brand-mint); }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .hero-wave { display: none; }
+    .w-lid { animation: none; }
+}
