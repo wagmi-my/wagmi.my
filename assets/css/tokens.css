@@ -1,0 +1,72 @@
+/* WAGMI design tokens. Generated from tokens/tokens.json by source/build_tokens.py. Do not edit; edit the source and rerun. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono-SemiBold.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+
+:root, [data-theme="dark"] {
+  --bg: #0e0f0c;
+  --surface: #1a1c17;
+  --text: #f6f1e7;
+  --text-muted: #b9b4a8;
+  --accent: #9bd94a;
+  --accent-fill: #9bd94a;
+  --on-accent: #0e0f0c;
+  --line: #2c2f27;
+  --brand-ink: #0e0f0c;
+  --brand-lime: #9bd94a;
+  --brand-leaf: #5e9e2e;
+  --brand-forest: #3f7a1c;
+  --brand-outline-deep: #2a5414;
+  --brand-cream: #f6f1e7;
+  --brand-tabby: #bc9a7f;
+  --brand-blush: #fc9586;
+  --brand-mint: #c9f08a;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --radius-none: 0px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-icon: 22%;
+  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+[data-theme="light"] {
+  --bg: #f6f1e7;
+  --surface: #ede6d8;
+  --text: #0e0f0c;
+  --text-muted: #5a5a50;
+  --accent: #3f7a1c;
+  --accent-fill: #9bd94a;
+  --on-accent: #0e0f0c;
+  --line: #d9d0bf;
+  --brand-ink: #0e0f0c;
+  --brand-lime: #9bd94a;
+  --brand-leaf: #5e9e2e;
+  --brand-forest: #3f7a1c;
+  --brand-outline-deep: #2a5414;
+  --brand-cream: #f6f1e7;
+  --brand-tabby: #bc9a7f;
+  --brand-blush: #fc9586;
+  --brand-mint: #c9f08a;
+}
+
+.display { font-family: var(--font-sans); font-size: 48px; line-height: 52px; font-weight: 800; letter-spacing: -0.02em; }
+.h1 { font-family: var(--font-sans); font-size: 32px; line-height: 38px; font-weight: 700; letter-spacing: -0.01em; }
+.h2 { font-family: var(--font-sans); font-size: 22px; line-height: 28px; font-weight: 600; }
+.body { font-family: var(--font-sans); font-size: 15px; line-height: 22px; font-weight: 400; }
+.small { font-family: var(--font-sans); font-size: 13px; line-height: 18px; font-weight: 400; }
+.tagline { font-family: var(--font-sans); font-size: 13px; line-height: 18px; font-weight: 500; letter-spacing: 0.18em; }
+.label { font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.08em; }
+.code { font-family: var(--font-mono); font-size: 14px; line-height: 21px; font-weight: 400; }
+
+/* Pixel art: never smooth */
+.pixel { image-rendering: pixelated; }
