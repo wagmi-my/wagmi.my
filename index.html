@@ -2,9 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <!-- Content Security Policy: only this site's own files, plus the intro script below
-         (allowed by its hash; if you edit that script, update the hash). -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-YcRY9L9TCGc8rk7m7+YNxx2pqIpUplVFVlnIc7ON8N8='; style-src 'self'; font-src 'self'; img-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+    <!-- Update the matching CSP hash if you edit either inline script below. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://www.googletagmanager.com 'sha256-YcRY9L9TCGc8rk7m7+YNxx2pqIpUplVFVlnIc7ON8N8=' 'sha256-bNnp3DTF0Zm+sOCVc4y+cGxiKRTrGko6QoU1fVuPgcw='; style-src 'self'; font-src 'self'; img-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+    <!-- Google Tag Manager -->
+    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-MBHN2VQG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+    </script>
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <script>
         // Before first paint: play the intro (wave dots assemble the W) once per session,
